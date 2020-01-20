@@ -5,9 +5,12 @@ const searchURL = 'https://developer.nps.gov/api/v1/parks';
 
 
 function formatQueryParams(params) {
-  const queryItems = Object.keys(params)
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-  return queryItems.join('&');
+  let searchFormat = "";
+  for (let [key, value] of Object.entries(params)) {
+      searchFormat = searchFormat + key + "=" + value + "&";
+  }
+  searchFormat = searchFormat.slice(0, -1).replace(/\s/g,'');
+  return searchFormat;
 }
 
 function displayResults(responseJson) {
@@ -33,7 +36,7 @@ function displayResults(responseJson) {
 function getNationalParks(query, maxResults) {
   const params = {
     api_key: apiKey,
-    q: query,
+    stateCode: query.split(),
     limit: maxResults,
   };
   const queryString = formatQueryParams(params)
